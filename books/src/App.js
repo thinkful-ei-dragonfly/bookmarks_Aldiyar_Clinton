@@ -14,8 +14,16 @@ class App extends React.Component {
     }
   }
 
+  setSearchTerm(userInput){
+    this.setState({
+      userInput
+    });
+  }
+
+
+
   componentDidMount() {
-    fetch(`https://www.googleapis.com/books/v1/volumes?q=Martin`)
+    fetch(`https://www.googleapis.com/books/v1/volumes?q=${this.state.userInput}`)
       .then(response => {
          if (!response.ok) {
         throw new Error('something went wrong');
@@ -23,7 +31,7 @@ class App extends React.Component {
     })
       .then (response => response.json())
       .then (data => {
-        console.log(data)
+        // console.log(data)
         const list = data.items
         this.setState({
           list
@@ -37,7 +45,7 @@ class App extends React.Component {
   render() {
     return (
       <div className='App'>
-        <Controls printType={this.state.printType} bookType={this.state.bookType}/>
+        <Controls printType={this.state.printType} bookType={this.state.bookType} setSearchTerm={this.setSearchTerm}/>
         <Books list={this.state.list}/>
       </div>  
     );
