@@ -13,8 +13,12 @@ export default class Controls extends React.Component {
     return (
       <div className='controls'>
         <h1>Google Book Search</h1>
-        <SearchBar setSearchTerm={this.props.setSearchTerm}/>
-        <FiltersBar />
+        <SearchBar 
+          setSearchTerm={this.props.setSearchTerm}
+          handleFetch={this.props.handleFetch} />
+        <FiltersBar 
+          setBookType={this.props.setBookType}
+          setPrintType={this.props.setPrintType}/>
       </div>
     )
   }

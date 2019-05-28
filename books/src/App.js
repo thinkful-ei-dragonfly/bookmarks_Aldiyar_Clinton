@@ -9,20 +9,11 @@ class App extends React.Component {
     this.state = {
       userInput: '',
       list: [],
-      printType: '',
-      bookType: '',
+      printType: 'all',
+      bookType: 'free-ebooks',
     }
   }
-
-  setSearchTerm(userInput){
-    this.setState({
-      userInput
-    });
-  }
-
-
-
-  componentDidMount() {
+  handleFetch = () => {
     fetch(`https://www.googleapis.com/books/v1/volumes?q=${this.state.userInput}`)
       .then(response => {
          if (!response.ok) {
@@ -31,22 +22,60 @@ class App extends React.Component {
     })
       .then (response => response.json())
       .then (data => {
-        // console.log(data)
+        if (data.totalItems>0) {
         const list = data.items
         this.setState({
           list
         });
+      } else {
+        this.setState({
+          list: [],
+          error: 'No Items'
+        })
+      }
       })
       .catch(err => {
         console.log('This is error', err)
       });
   }
 
+
+  setSearchTerm = (userInput) => {
+    this.setState({
+      userInput
+    });
+  }
+
+  setPrintType = (printType) => {
+    this.setState({
+      printType
+    });
+  }
+
+  setBookType = (bookType) => {
+    this.setState({
+      bookType
+    })
+  }
+
+
+  
+
   render() {
     return (
       <div className='App'>
-        <Controls printType={this.state.printType} bookType={this.state.bookType} setSearchTerm={this.setSearchTerm}/>
-        <Books list={this.state.list}/>
+
+        <Controls 
+        printType={this.state.printType} 
+        bookType={this.state.bookType} 
+        setSearchTerm={this.setSearchTerm} 
+        setPrintType={this.setPrintType}
+        setBookType={this.setBookType}
+        handleFetch={this.handleFetch}/>
+        <Books list={this.state.list} />
+        {
+          this.state.error === 'No Items'? <h2>No Items Found</h2> : null
+        }
       </div>  
     );
   }
